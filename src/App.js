@@ -1,23 +1,43 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
+import axios from "axios"
 
 function App() {
+
+  let [data, setdata] = useState([]);
+  let [page, setpage] = useState(1)
+  console.log(data, "data")
+  useEffect(() => {
+
+    axios.get(`http://localhost:5000?page=${page}`)
+      .then(res => {
+        console.log(res, "res")
+
+        setdata([...data, ...res.data])
+      })
+      .catch(err => { console.log(err) })
+
+
+
+
+  }, [page])
+
+  window.addEventListener('scroll', () => {
+    console.log("maggi")
+    //visible part of screen
+    if (window.scrollY + window.innerHeight >=
+      document.documentElement.scrollHeight) {
+
+
+      setpage(page + 1)
+      console.log(page, "page")
+
+    }
+  })
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {data.map(e => <img src={`https://images.bewakoof.com/t320/${e.display_image}`} />)}
     </div>
   );
 }
